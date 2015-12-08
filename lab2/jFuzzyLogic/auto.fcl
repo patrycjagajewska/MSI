@@ -1,0 +1,71 @@
+FUNCTION_BLOCK
+
+VAR_INPUT
+predkosc : REAL;
+przyspieszenie : REAL;
+odleglosc : REAL;
+END_VAR
+
+VAR_OUTPUT
+moc : REAL;
+END_VAR
+
+FUZZIFY predkosc
+TERM zbyt_wolna := (0, 1) (20, 1) (25, 0.5) (30, 0);
+TERM wolna := (20, 0) (25, 0.5) (30, 1) (50, 1) (55, 0.5) (60, 0);
+TERM optymalna := (50, 0) (55, 0.5) (60, 1) (80, 1) (85, 0.5) (90 ,0);
+TERM szybka := (80, 0) (85, 0.5) (90, 1) (110, 1) (115, 0.5) (120 ,0);
+TERM zbyt_szybka := (110, 0) (115, 0.5) (120, 1) (140, 1);
+END_FUZZIFY
+
+FUZZIFY przyspieszenie
+TERM zwalnianie := (0, 1) (10, 1) (15, 0.5) (20, 0);
+TERM stale := (10, 0) (15, 0.5) (20, 1) (25, 0.5) (30, 0);
+TERM przyspieszanie := (20, 0) (25, 0.5) (30, 1) (40, 1);
+END_FUZZIFY
+
+FUZZIFY odleglosc
+TERM bardzo_blisko := (0, 1) (50, 0.5) (100, 0);
+TERM blisko := (0, 0) (50, 0.5) (100, 1) (500, 1) (550, 0.5) (600, 0);
+TERM daleko := (500, 0) (550, 0.5) (600, 1) (1000, 1);
+END_FUZZIFY
+
+DEFUZZIFY moc
+TERM zmniejsz_znaczaco := (0, 0) (5, 0.5) (10, 1) (15, 0.5) (20, 0);
+TERM zmniejsz_delikatnie := (10, 0) (15, 0.5) (20, 1) (25, 0.5) (30, 0);
+TERM zostaw := (20, 0) (25, 0.5) (30, 1) (35, 0.5) (40, 0);
+TERM zwieksz_delikatnie := (30, 0) (35, 0.5) (40, 1) (45, 0.5) (50, 0);
+TERM zwieksz_znaczaco := (40, 0) (45, 0.5) (50, 1) (55, 0.5) (60, 0);
+METHOD : COG;
+DEFAULT := 0;
+END_DEFUZZIFY
+
+RULEBLOCK first 
+AND: MIN;
+ACT: MIN;
+
+RULE 0: IF predkosc IS zbyt_wolna AND przyspieszenie IS zwalnianie THEN moc IS zwieksz_znaczaco;
+RULE 1: IF predkosc IS zbyt_wolna AND (przyspieszenie IS stale OR odleglosc IS daleko) THEN moc IS zwieksz_delikatnie;
+RULE 2: IF predkosc IS zbyt_wolna AND przyspieszenie IS przyspieszanie THEN moc IS zostaw;
+
+RULE 3: IF predkosc IS wolna AND przyspieszenie IS zwalnianie THEN moc IS zwieksz_delikatnie;
+RULE 4: IF predkosc IS wolna AND (przyspieszenie IS stale OR odleglosc IS daleko) THEN moc IS zwieksz_delikatnie;
+RULE 5: IF predkosc IS wolna AND przyspieszenie IS przyspieszanie THEN moc IS zostaw;
+RULE 6: IF predkosc IS wolna AND (odleglosc IS blisko OR odleglosc IS bardzo_blisko) THEN moc IS zostaw;
+
+RULE 7: IF predkosc IS optymalna AND przyspieszenie IS zwalnianie THEN moc IS zwieksz_delikatnie;
+RULE 8: IF predkosc IS optymalna AND przyspieszenie IS stale THEN moc IS zostaw;
+RULE 9: IF predkosc IS optymalna AND (przyspieszenie IS przyspieszanie OR odleglosc IS bardzo_blisko) THEN moc IS zmniejsz_delikatnie;
+RULE 10: IF predkosc IS optymalna AND (odleglosc IS daleko OR odleglosc IS blisko) THEN moc IS zostaw;
+
+RULE 11: IF predkosc IS szybka AND przyspieszenie IS zwalnianie THEN moc IS zostaw;
+RULE 12: IF predkosc IS szybka AND (przyspieszenie IS stale OR przyspieszenie IS przyspieszanie) THEN moc IS zmniejsz_delikatnie;
+RULE 13: IF predkosc IS szybka AND (odleglosc IS blisko OR odleglosc IS bardzo_blisko) THEN moc IS zmniejsz_znaczaco;
+
+RULE 14: IF predkosc IS zbyt_szybka AND przyspieszenie is zwalnianie THEN moc IS zmniejsz_delikatnie;
+RULE 15: IF predkosc IS zbyt_szybka AND (przyspieszenie IS stale OR przyspieszenie IS przyspieszanie) THEN moc IS zmniejsz_znaczaco;
+RULE 16: IF predkosc IS zbyt_szybka AND (odleglosc IS blisko OR odleglosc IS bardzo_blisko) THEN moc IS zmniejsz_znaczaco;
+
+END_RULEBLOCK
+
+END_FUNCTION_BLOCK

@@ -1,0 +1,13 @@
+Temat: Sterownik wykorzystujący logikę oraz zbiory rozmyte w celu ustalenia mocy silnika samochodu, w zależnosci od odległości od celu, prędkości oraz przyspieszenia.
+
+1. Wejście:
+	* predkosc - zmienna typu int, wskazuje predkosc samochodu w km/h (0, 140)
+	* przyspieszenie - zmienna typu int, wskazuje przyspieszenie (0, 40)
+	* odleglosc - zmienna typu int, wskazuje odleglosc samochodu od celu podrozy w km (0, 1000)
+
+2. Wyjście:
+	* moc - pokazuje zmianę mocy silnika, w celu osiągnięcia wybranego celu w uśrednionym czasie
+
+3. Kompilacja i uruchomienie:
+	javac -cp jFuzzyLogic_1_2_1.jar;. FuzzyExample.java
+	java -cp jFuzzyLogic_1_2_1.jar;. FuzzyExample auto.fcl <int>predkosc <int>przyspieszenie <int>odleglosc
