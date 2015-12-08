@@ -1,0 +1,89 @@
+(defdomain pizza
+   (
+    (:operator (!load-car ?pizza ?car ?loc)
+               ()
+               ((pizza-at ?pizza ?loc) (:protection (car-at ?car ?loc)))
+               ((in-car ?pizza ?car)))
+
+    (:operator (!unload-car ?pizza ?car ?loc)
+               ((cost ?pizza ?val))
+               ((in-car ?pizza ?car) (:protection (car-at ?car ?loc)) (cost ?pizza ?val))
+               ((pizza-at ?pizza ?loc) (cost ?pizza (call + ?val 20))))
+
+    (:operator (!drive-car ?car ?loc-from ?loc-to)
+               ((cost ?pizza ?val))
+               ((car-at ?car ?loc-from) (cost ?pizza ?val))
+               ((car-at ?car ?loc-to) (:protection (car-at ?car ?loc-to)) (cost ?pizza (call + ?val 10))))
+			   
+	(:operator (!change-car ?car ?parking-now ?parking-goal)
+               ()
+               ((pizza-at ?pizza ?parking-now))
+               ((pizza-at ?pizza ?parking-goal) (:protection (pizza-at ?pizza ?parking-goal))))		   
+
+    (:operator (!add-protection ?g)
+               ()
+               ()
+               ((:protection ?g))
+               )
+
+    (:operator (!delete-protection ?g)
+               ()
+               ((:protection ?g))
+               ()
+               )
+
+    (:method (pizza-at ?pizza ?loc-goal)
+		drive-car
+        ((in-city ?loc-goal ?city-goal)
+			(pizza-at ?pizza ?loc-now)
+			(in-city ?loc-now ?city-goal)
+			(car ?car ?city-now))
+			
+		((on-the-road ?car ?pizza ?loc-now ?loc-goal))
+	  
+		change-car
+		((in-city ?loc-goal ?city-goal)
+			(pizza-at ?pizza ?loc-now)
+			(in-city ?loc-now ?city-now)
+			(different ?city-goal ?city-now)
+			(car ?car-now ?city-now)
+			(car ?car-goal ?city-goal)
+			(parking ?parking-now ?city-now)
+			(parking ?parking-goal ?city-goal))
+			
+		((on-the-road ?car-now ?pizza ?loc-now ?parking-now)
+            (:immediate !change-car ?pizza ?parking-now ?parking-goal)
+            (on-the-road ?car-goal ?pizza ?parking-goal ?loc-goal)))
+
+      
+    (:method (on-the-road ?car ?pizza ?loc-from ?loc-to)
+        ((same ?loc-from ?loc-to))
+        
+		()
+
+		((in-city ?loc-from ?city)
+			(car ?car ?city))
+
+		((car-at ?car ?loc-from)
+			(:immediate !load-car ?pizza ?car ?loc-from)
+			(car-at ?car ?loc-to)
+			(:immediate !unload-car ?pizza ?car ?loc-to)))
+
+
+    (:method (car-at ?car ?loc-to)
+		car-not-yet-there
+		((car-at ?car ?loc-from)
+			(different ?loc-from ?loc-to))
+            
+		((:immediate !drive-car ?car ?loc-from ?loc-to))
+
+		car-already-there
+		((car-at ?car ?loc-from)
+			(same ?loc-from ?loc-to))
+            
+		((:immediate !add-protection (car-at ?car ?loc-to))))
+
+
+    (:- (same ?x ?x) nil)
+    (:- (different ?x ?y) ((not (same ?x ?y))))
+    ))
