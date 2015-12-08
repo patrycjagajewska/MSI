@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<aiml version="1.0.1" xmlns="http://alicebot.org/2001/AIML-1.0.1"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://alicebot.org/2001/AIML-1.0.1 http://aitools.org/aiml/schema/AIML.xsd">
+	
+	<!--W zadaniu użyłam synonimów i słów kluczowych(sufiksów, prefiksów) szczególnie przy powitaniu, pożegnaniu i odpowiadaniu na pytania tak/nie.
+	Kolejną konstrukcją jaką użyłam jest kontekst <that>. Występuje on w pytaniu o ceny karnetów.
+	Użyłam też predykatów i redukcji symbolicznej.-->
+
+	<category>
+		<pattern>Czesc</pattern>
+		<template>Witaj, silownia FitGym, w czym moge pomoc?</template>
+	</category>
+	
+	<category>
+		<pattern>Dzien dobry</pattern>
+		<template><srai>Czesc</srai></template>
+	</category>
+	<category>
+		<pattern>Witaj</pattern>
+		<template><srai>Czesc</srai></template>
+	</category>
+	<category>
+		<pattern>Dobry wieczor</pattern>
+		<template><srai>Czesc</srai></template>
+	</category>
+	
+	<category>
+		<pattern>Dziekuje</pattern>
+		<template>Prosze, ciesze sie ze moglismy pomoc.</template>
+	</category>
+	<category>
+		<pattern>Dziekuje *</pattern>
+		<template><srai>Dziekuje</srai></template>
+	</category>
+	
+	
+	<category>
+		<pattern>Do widzenia</pattern>
+		<template>Do widzenia i zapraszamy do naszego klubu!</template>
+	</category>
+	<category>
+		<pattern>Dobranoc</pattern>
+		<template><srai>Do widzenia</srai></template>
+	</category>
+	
+	
+	<category>
+		<pattern>Chcialabym *</pattern>
+		<template><srai>Chcialam <star/></srai></template>
+	</category>
+	<category>
+		<pattern>Chcialem *</pattern>
+		<template><srai>Chcialam <star/></srai></template>
+	</category>
+	<category>
+		<pattern>Chcialbym *</pattern>
+		<template><srai>Chcialam <star/></srai></template>
+	</category>
+	
+	
+	<category>
+		<pattern>Tak *</pattern>
+		<template><srai>Tak</srai></template>
+	</category>
+	<category>
+		<pattern>Nie *</pattern>
+		<template><srai>Nie</srai></template>
+	</category>
+	
+	
+	<category>
+		<pattern>Chcialam zapytac o godziny otwarcia silowni</pattern>
+		<template>Klub otwarty jest codziennie w godzinach 6.00-22.00, w weekendy do 23.00.</template>
+	</category>
+	
+	<category>
+		<pattern>Jakie sa * </pattern>
+		<template><srai>Chcialam zapytac o <star/></srai></template>
+	</category>
+	<category>
+		<pattern>W jakich godzinach jest otwarta silownia</pattern>
+		<template><srai>Chcialam zapytac o godziny otwarcia silowni</srai></template>
+	</category>
+	
+	
+	
+	<category>
+		<pattern>Gdzie miesci sie wasza silownia</pattern>
+		<template>Obecnie mamy 3 placowki: przy ulicy Lea, Mogilskiej i Norymberskiej. Dokladne adresy znalezc mozna na naszej stronie internetowej w zakladce kontakt.</template>
+	</category>
+	
+	<category>
+		<pattern>W ktorym miejscu znajduje sie *</pattern>
+		<template><srai>Gdzie miesci sie <star/></srai></template>
+	</category>
+	<category>
+		<pattern>Na jakiej ulicy znajduje sie *</pattern>
+		<template><srai>Gdzie miesci sie <star/></srai></template>
+	</category>
+	<category>
+		<pattern>Gdzie znajduje sie *</pattern>
+		<template><srai>Gdzie miesci sie <star/></srai></template>
+	</category>
+
+	
+	<category>
+		<pattern>Jakie sa ceny karnetow</pattern>
+		<template>A jestes czlonkiem klubu?</template>
+	</category>
+	<category>
+		<pattern>Chcialam zapytac o *</pattern>
+		<template><srai>Jakie sa <star/></srai></template>
+	</category>
+	
+	<category>
+		<pattern>Tak</pattern>
+		<that>A jestes czlonkiem klubu</that>
+		<template>Karnety dla klientow klubu zaczynaja sie juz od 59 zl. Wiecej informacji dostepne jest naszej na stronie internetowej w zakladce cennik.</template>
+	</category>
+	<category>
+		<pattern>Nie</pattern>
+		<that>A jestes czlonkiem klubu</that>
+		<template>Karnety dla nowych klientow zaczynaja sie juz od 79 zl. Wiecej informacji dostepne jest naszej na stronie internetowej w zakladce cennik.</template>
+	</category>
+	
+	
+	<category>
+		<pattern>Trzeba nosic klodke do szafki</pattern>
+		<template>Tak</template>
+	</category>
+	<category>
+		<pattern>Mozna dokonywac rezerwacji telefonicznie lub mailowo</pattern>
+		<template>Tak</template>
+	</category>
+	<category>
+		<pattern>Podczas kupowania karnetu wymagany jest dokument tozsamosci</pattern>
+		<template>Tak</template>
+	</category>
+	<category>
+		<pattern>Czy *</pattern>
+		<template><srai><star/></srai>, <set name="to"><star/></set></template>
+	</category>
+	
+	
+	<category>
+		<pattern>Czy zajecia zarezerwowane trzeba odwolac w razie zmiany planow</pattern>
+		<template>Nie ma takiej koniecznosci, aczkolwiek prosimy o telefon w takich przypadkach.</template>
+	</category>
+
+</aiml>
